@@ -1,0 +1,24 @@
+# Arquivo de variáveis de ambiente - Contém segredos!
+.env
+
+# Dependências do Node.js
+node_modules/
+
+# Arquivos de build e logs do Node.js
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Binários e caches do Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Caches e arquivos compilados do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
