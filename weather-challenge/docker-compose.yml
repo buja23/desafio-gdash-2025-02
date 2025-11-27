@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  # ------------------------------------
+  # 1. Banco de Dados (MongoDB)
+  # ------------------------------------
+  mongo:
+    image: mongo:6.0
+    container_name: weather_mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - "27017:27017" # Porta externa : Porta interna
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - weather-network
+
+  # ------------------------------------
+  # 2. Message Broker (RabbitMQ)
+  # ------------------------------------
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: weather_rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - "5672:5672"   # Porta para comunicação entre serviços
+      - "15672:15672" # Dashboard visual (acesso pelo navegador)
+    networks:
+      - weather-network
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ------------------------------------
+  # SERVIÇOS DE APLICAÇÃO (Futuro)
+  # ------------------------------------
+  # Deixaremos comentados até criarmos os códigos na Fase 2, 3 e 4.
+  
+  # backend:
+  #   build: ./backend
+  #   depends_on:
+  #     - mongo
+  #   ...
+  
+  # weather-collector:
+  #   build: ./weather-collector
+  #   ...
+
+  # weather-worker:
+  #   build: ./weather-worker
+  #   ...
+  
+  # frontend:
+  #   build: ./frontend
+  #   ...
+
+volumes:
+  mongo_data:
+
+networks:
+  weather-network:
+    driver: bridge
